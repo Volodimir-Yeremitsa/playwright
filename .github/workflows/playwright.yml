@@ -2,10 +2,14 @@ name: Playwright Tests & Allure Report
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
+      - RomaShepel
   pull_request:
-    branches: [ main, master ]
-
+    branches:
+      - main
+      - master
 permissions:
   contents: write
 
