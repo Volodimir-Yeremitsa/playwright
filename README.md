@@ -1,42 +1,73 @@
-# Playwright TypeScript Test Framework
+# GreenCity Playwright Test Framework
 
 ## Опис
-Це базова структура проєкту для автоматизованого тестування веб-застосунку з використанням Playwright та TypeScript.
-Проєкт підготовлений як фундамент для подальшої розробки автотестів із використанням Page Object Model та Component-based архітектури.
 
-## Встановлення залежностей
+Проєкт для автоматизації тестування GreenCity Web Application з використанням Playwright + TypeScript.
+Архітектура побудована на Page Object Model та Component-based підході.
+
+## Встановлення
+
 ```bash
 npm install
+npx playwright install
+npm install -D allure-playwright
 ```
 
-## Встановлення браузерів Playwright
-npx playwright install
+## Налаштування .env
 
-## Запуск тестів
-npx playwright test
+Створіть `.env` на основі `.env.example`:
 
-## Запуск тестів у UI режимі
-npx playwright test --ui
-
-## Конфігурація через .env
-Для локального запуску потрібно створити файл .env на основі .env.example.
-Приклад:
-
-BASE_URL=https://example.com
-HEADLESS=true
+```env
+BASE_URL="https://www.greencity.cx.ua/#/greenCity"
+HEADLESS=false
 RETRIES=0
 TIMEOUT=30000
+LOGIN_EMAIL=your_email
+LOGIN_PASSWORD=your_password
+```
 
-## Структура проєкту
-tests/          - директорія для тестів
-pages/          - Page Object класи
-components/     - компоненти сторінок
-fixtures/       - кастомні fixtures
-utils/          - допоміжні утиліти
+## Запуск тестів
 
-## Основні файли
-playwright.config.ts — конфігурація Playwright
-utils/env.ts — helper для роботи зі змінними середовища
-pages/base.page.ts — базовий клас сторінки
-components/base.component.ts — базовий клас компонента
-.env.example — приклад змінних середовища
+```bash
+npm test
+```
+
+Запуск тільки TC-01:
+
+```bash
+npm run test:tc01
+```
+
+UI режим:
+
+```bash
+npm run test:ui
+```
+
+## Allure Report
+
+Після запуску тестів згенерувати звіт:
+
+```bash
+npm run allure:generate
+npm run allure:open
+```
+
+## Структура
+
+```text
+pages/          Page Object класи
+components/     повторювані UI-компоненти: header, modal тощо
+utils/          env helper, auth helper
+tests/          spec-файли з тестами
+```
+
+## Основні класи
+
+- `BasePage` — базові методи для сторінок.
+- `HomePage` — головна сторінка GreenCity.
+- `NewsPage` — сторінка новин `/news`.
+- `CreateNewsPage` — форма створення новини.
+- `HeaderComponent` — верхнє меню сайту.
+- `SignInModal` — модальне вікно логіну.
+- `auth.helper.ts` — helper для логіну через UI.
