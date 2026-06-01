@@ -119,6 +119,8 @@ export class CreateNewsPage extends BasePage {
       const allTagButtons = this.tagBlock.locator('button');
       const count = await allTagButtons.count();
       
+      console.log(`📊 Total tag buttons found: ${count}`);
+      
       let selectedCount = 0;
       for (let i = 0; i < count; i++) {
         const button = allTagButtons.nth(i);
@@ -127,6 +129,8 @@ export class CreateNewsPage extends BasePage {
         let ariaPressed = await button.getAttribute('aria-pressed');
         if (ariaPressed === 'true') {
           selectedCount++;
+          const tagName = await button.textContent();
+          console.log(`  ✓ Tag selected (aria-pressed): ${tagName}`);
           continue;
         }
         
@@ -134,6 +138,8 @@ export class CreateNewsPage extends BasePage {
         const className = await button.getAttribute('class');
         if (className && (className.includes('active') || className.includes('selected'))) {
           selectedCount++;
+          const tagName = await button.textContent();
+          console.log(`  ✓ Tag selected (class): ${tagName}`);
           continue;
         }
         
@@ -141,9 +147,12 @@ export class CreateNewsPage extends BasePage {
         const ngSelected = await button.getAttribute('ng-reflect-selected');
         if (ngSelected === 'true') {
           selectedCount++;
+          const tagName = await button.textContent();
+          console.log(`  ✓ Tag selected (ng-reflect-selected): ${tagName}`);
         }
       }
       
+      console.log(`🏷️  Total selected tags: ${selectedCount}`);
       return selectedCount;
     });
   }
@@ -174,6 +183,71 @@ export class CreateNewsPage extends BasePage {
     await test.step('Дочекатися публікації новини', async () => {
       // Чекаємо, щоб форма закрилася або з'явиться повідомлення
       await this.page.waitForTimeout(2000);
+    });
+  }
+
+  async uploadImage(filePath: string): Promise<void> {
+    await test.step(`Завантажити зображення: ${filePath}`, async () => {
+      // Знаходимо input для завантаження файлу
+      const fileInput = this.form.locator('input[type="file"]').first();
+      
+      // Завантажуємо файл
+      await fileInput.setInputFiles(filePath);
+      
+      // Чекаємо обробки файлу
+      await this.page.waitForTimeout(1500);
+    });
+  }
+
+  async getImageUploadErrorMessage(): Promise<string | null> {
+    return await test.step('Отримати помилку завантаження зображення', async () => {
+      const errorMessage = this.form
+        .locator('[class*="error"], .error-message, [class*="invalid"]')
+        .filter({ hasText: /PNG|JPEG|JPG|size|10MB/i })
+        .first();
+      
+      const isVisible = await errorMessage.isVisible().catch(() => false);
+      if (isVisible) {
+        return await errorMessage.textContent();
+      }
+      
+      return null;
+    });
+  }
+
+  async isImageUploadFieldHighlightedRed(): Promise<boolean> {
+    return await test.step('Перевірити, чи поле завантаження зображення виділено червоним', async () => {
+      const imageUploadContainer = this.form
+        .locator('div')
+        .filter({ hasText: /Browse|обрати|Drop your image/i })
+        .first();
+      
+      const className = await imageUploadContainer.getAttribute('class');
+      const style = await imageUploadContainer.getAttribute('style');
+      
+      return (
+        (className && className.includes('error')) ||
+        (style && style.includes('red'))
+      );
+    });
+  }
+
+  async isImageUploaded(): Promise<boolean> {
+    return await test.step('Перевірити, чи зображення завантажено', async () => {
+      // Перевіряємо наявність preview зображення або затвердження завантаження
+      const imagePreview = this.form
+        .locator('img[src], [class*="preview"], [class*="image-container"]')
+        .first();
+      
+      // Якщо preview є - зображення завантажено
+      try {
+        const isVisible = await imagePreview.isVisible({ timeout: 2000 });
+        return isVisible;
+      } catch {
+        // Якщо preview не знайдено, перевіряємо чи file input був оброблений
+        const fileInput = this.form.locator('input[type="file"]').first();
+        return await fileInput.inputValue().then(val => val !== '');
+      }
     });
   }
 }

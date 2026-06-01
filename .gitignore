@@ -8,3 +8,5 @@ allure-report/
 playwright/.cache/
 playwright/.auth/
 storage/*.json
+img/*
+

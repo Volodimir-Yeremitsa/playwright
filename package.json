@@ -8,6 +8,7 @@
     "test:ui": "playwright test --ui",
     "test:tc01": "playwright test tests/tc-01-create-news-form.spec.ts",
     "test:tc03": "playwright test tests/tc-03-tag-selection.spec.ts",
+    "test:tc04": "playwright test tests/tc-04-UploadImage.spec.ts",
     "allure:generate": "allure generate ./allure-results -o ./allure-report --clean",
     "allure:open": "allure open ./allure-report"
   },
