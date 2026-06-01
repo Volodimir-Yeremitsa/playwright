@@ -11,15 +11,12 @@ export abstract class BasePage {
   constructor(page: Page) {
     this.page = page;
 
-    // Спільні компоненти, які є на багатьох сторінках.
     this.header = new HeaderComponent(page);
     this.signInModal = new SignInModal(page);
   }
 
-  // Кожна конкретна сторінка сама задає свій URL.
   abstract get url(): string;
 
-  // Перехід на сторінку.
   async navigate(): Promise<Response | null> {
     if (!this.url) {
       throw new Error(
@@ -28,16 +25,13 @@ export abstract class BasePage {
       );
     }
     
-    // Використовуємо 'domcontentloaded', щоб уникнути таймаутів через довге завантаження трекерів чи медіа
     return await this.page.goto(this.url, { waitUntil: 'domcontentloaded' });
   }
 
-  // Чекаємо не networkidle, а конкретний ключовий елемент сторінки.
   async waitForPageReady(element: Locator, timeout = 10000): Promise<void> {
     await expect(element).toBeVisible({ timeout });
   }
 
-  // Перевірка поточного URL.
   async assertOnPage(urlPart: string = this.url): Promise<void> {
     await expect(this.page).toHaveURL(new RegExp(this.escapeRegExp(urlPart)));
   }

@@ -61,9 +61,7 @@ export class CreateNewsPage extends BasePage {
   }
 
   get url(): string {
-    // Якщо форма відкривається як окрема сторінка, URL може бути таким.
-    // Якщо відкривається модалкою — тест потрапляє сюди через NewsPage.openCreateNewsForm().
-    return `${ENV.BASE_URL}/news/create-news`;
+   return `${ENV.BASE_URL}/news/create-news`;
   }
 
   async waitForOpened(): Promise<void> {
@@ -89,9 +87,7 @@ export class CreateNewsPage extends BasePage {
 
   async expectFieldsInCorrectOrder(): Promise<void> {
     await test.step('Перевірити порядок полів форми Create News', async () => {
-      //The form displays all fields in the specified order (Title, Tags, Add Image, Main Text, Author, Date, Source, Cancel/Preview/Publish).
-      //DOM структура може бути складною, тому перевіряємо порядок за допомогою позицій елементів на сторінці?
-
+      
     });
   }
 
@@ -115,7 +111,6 @@ export class CreateNewsPage extends BasePage {
 
   async getSelectedTagsCount(): Promise<number> {
     return await test.step('Отримати кількість обраних тегів', async () => {
-      // Шукаємо всі button теги в tagBlock
       const allTagButtons = this.tagBlock.locator('button');
       const count = await allTagButtons.count();
       
@@ -125,7 +120,6 @@ export class CreateNewsPage extends BasePage {
       for (let i = 0; i < count; i++) {
         const button = allTagButtons.nth(i);
         
-        // Перевіряємо aria-pressed
         let ariaPressed = await button.getAttribute('aria-pressed');
         if (ariaPressed === 'true') {
           selectedCount++;
@@ -134,7 +128,6 @@ export class CreateNewsPage extends BasePage {
           continue;
         }
         
-        // Перевіряємо клас active або selected
         const className = await button.getAttribute('class');
         if (className && (className.includes('active') || className.includes('selected'))) {
           selectedCount++;
@@ -143,7 +136,6 @@ export class CreateNewsPage extends BasePage {
           continue;
         }
         
-        // Перевіряємо ng-reflect-selected
         const ngSelected = await button.getAttribute('ng-reflect-selected');
         if (ngSelected === 'true') {
           selectedCount++;
@@ -174,27 +166,22 @@ export class CreateNewsPage extends BasePage {
   async publish(): Promise<void> {
     await test.step('Натиснути кнопку Publish', async () => {
       await this.publishButton.click();
-      // Чекаємо повідомлення про успішне створення
       await this.page.waitForTimeout(2000);
     });
   }
 
   async waitForPublished(): Promise<void> {
     await test.step('Дочекатися публікації новини', async () => {
-      // Чекаємо, щоб форма закрилася або з'явиться повідомлення
       await this.page.waitForTimeout(2000);
     });
   }
 
   async uploadImage(filePath: string): Promise<void> {
     await test.step(`Завантажити зображення: ${filePath}`, async () => {
-      // Знаходимо input для завантаження файлу
       const fileInput = this.form.locator('input[type="file"]').first();
       
-      // Завантажуємо файл
       await fileInput.setInputFiles(filePath);
       
-      // Чекаємо обробки файлу
       await this.page.waitForTimeout(1500);
     });
   }
@@ -234,17 +221,14 @@ export class CreateNewsPage extends BasePage {
 
   async isImageUploaded(): Promise<boolean> {
     return await test.step('Перевірити, чи зображення завантажено', async () => {
-      // Перевіряємо наявність preview зображення або затвердження завантаження
       const imagePreview = this.form
         .locator('img[src], [class*="preview"], [class*="image-container"]')
         .first();
       
-      // Якщо preview є - зображення завантажено
       try {
         const isVisible = await imagePreview.isVisible({ timeout: 2000 });
         return isVisible;
       } catch {
-        // Якщо preview не знайдено, перевіряємо чи file input був оброблений
         const fileInput = this.form.locator('input[type="file"]').first();
         return await fileInput.inputValue().then(val => val !== '');
       }

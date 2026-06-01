@@ -8,7 +8,6 @@ export class HomePage extends BasePage {
   constructor(page: Page) {
     super(page);
 
-    // Ключовий елемент головної сторінки.
     this.pageLogo = page.locator('app-header').getByAltText(/green city/i)
   }
 

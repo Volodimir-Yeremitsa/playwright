@@ -25,7 +25,6 @@ export class PublishedNewsPage extends BasePage {
 
   async getNewsTagsByTitle(newsTitle: string): Promise<string[]> {
     return await test.step(`Отримати теги новини "${newsTitle}"`, async () => {
-      // Намагаємося знайти контейнер новини за заголовком
       const newsItem = this.page.locator(`text=${newsTitle}`).locator('..').first();
       const tagsInNews = newsItem.locator('[class*="tag"], [class*="chip"], .tag-item');
       
