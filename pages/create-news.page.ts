@@ -20,6 +20,7 @@ export class CreateNewsPage extends BasePage {
   readonly cancelButton: Locator;
   readonly previewButton: Locator;
   readonly publishButton: Locator;
+  readonly EditButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -58,6 +59,7 @@ export class CreateNewsPage extends BasePage {
     //tc-06-verify-source-field
     this.sourceWarning = this.form.locator('.source-block .field-info.warning');
     
+    this.EditButton = this.form.locator('.submit-buttons .primary-global-button');
   }
 
   get url(): string {
@@ -293,4 +295,33 @@ export class CreateNewsPage extends BasePage {
       await expect(this.mainTextInput).toHaveText('Test content with 20 characters');
     });
   }
+
+  async OpenPreviewMode(): Promise<void> {
+    return test.step('Натиснути кнопку Preview ', async () => {
+      await this.titleInput.fill('Test Preview');
+      await this.enterMainText('This is a test preview content');
+      await this.selectTag('News'); 
+
+      await this.previewButton.click();
+    });
+  }
+
+  async editNews(
+    title: string,
+    content: string,
+    tag: string
+  ): Promise<void> {
+    await test.step('Відредагувати новину: createNewsPage.editNews', async () => {
+      await this.titleInput.fill(title);
+
+      await this.mainTextInput.fill('');
+      await this.enterMainText(content);
+
+      await this.selectTag(tag);
+
+      await expect(this.EditButton).toBeEnabled();
+      await this.EditButton.click();
+
+  });
+}
 }

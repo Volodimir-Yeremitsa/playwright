@@ -1,4 +1,4 @@
-import { Locator, Page, test } from '@playwright/test';
+import { expect, Locator, Page, test } from '@playwright/test';
 import { BasePage } from '@pages/base.page';
 import { ENV } from '@utils/env';
 
@@ -6,6 +6,10 @@ export class NewsPage extends BasePage {
   readonly createNewsButton: Locator;
   readonly newsContainer: Locator;
   readonly firstNews: Locator;
+
+  readonly searchButton: Locator;
+  readonly searchInput: Locator;
+  readonly newsLinks: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -16,7 +20,12 @@ export class NewsPage extends BasePage {
       .getByRole('link', { name: /create news|створити новину/i })
       .first();
       
-    this.firstNews = page.locator('.container .list-wrapper a.link').first();  
+    this.newsLinks = page.locator('.container .list-wrapper a.link');
+    this.firstNews = this.newsLinks.first();
+
+    this.searchButton = page.locator('.container-img .search-img').first();
+    this.searchInput = page.locator('.container-input input[placeholder="Search"]');
+
   }
   
   get url(): string {
@@ -40,6 +49,23 @@ export class NewsPage extends BasePage {
   async openFirstNews(): Promise<void> {
     await test.step('Відкрити першу новину зі списку', async () => {
       await this.firstNews.click();
+    });
+  }
+
+  async searchNewsByTitle(title: string): Promise<void> {
+    await test.step(`Знайти новину за заголовком: ${title}`, async () => {
+      await this.searchButton.click();
+      await this.searchInput.fill(title);
+      await expect(this.newsLinks.first()).toBeVisible();
+    });
+  }
+
+  async openNewsByTitle(title: string): Promise<void> {
+    await test.step(`Відкрити новину з заголовком: ${title}`, async () => {
+      const news = this.newsLinks.filter({ hasText: title }).first();
+
+      await expect(news).toBeVisible();
+      await news.click();
     });
   }
 
