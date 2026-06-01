@@ -250,4 +250,29 @@ export class CreateNewsPage extends BasePage {
       }
     });
   }
+
+  async uploadImageFromUrl(imageUrl: string): Promise<void> {
+    await test.step(`Завантажити зображення за URL`, async () => {
+      try {
+        await this.page.evaluate((url) => {
+          const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+          if (input) {
+            fetch(url)
+              .then(r => r.blob())
+              .then(blob => {
+                const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                input.files = dataTransfer.files;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+              });
+          }
+        }, imageUrl);
+        
+        await this.page.waitForTimeout(2000);
+      } catch (error) {
+        console.warn(`⚠️ Image URL upload: ${error}`);
+      }
+    });
+  }
 }

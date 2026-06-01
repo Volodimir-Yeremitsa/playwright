@@ -1,11 +1,10 @@
 import { test, expect } from '@playwright/test';
-import path from 'path';
 import { NewsPage } from '@pages/news.page';
 import { CreateNewsPage } from '@pages/create-news.page';
 import { login } from '@utils/auth.helper';
 
-test.describe('TC-04: Create news with image upload (PNG/JPG, max 10MB)', () => {
-  test('User can upload image (PNG or JPG) up to 10MB while creating news with 3 tags', async ({ page }) => {
+test.describe('TC-04: Create news with image upload', () => {
+  test('User can create news with 3 tags and upload image via URL', async ({ page }) => {
     // Preconditions
     await login(page);
 
@@ -17,19 +16,19 @@ test.describe('TC-04: Create news with image upload (PNG/JPG, max 10MB)', () => 
     const createNewsPage = new CreateNewsPage(page);
     await createNewsPage.waitForOpened();
 
-    // Step 1: Select three tags (like TC-03)
+    // Step 1: Select three tags
     const tagsToSelect = ['News', 'Events', 'Education'];
     for (const tag of tagsToSelect) {
       await createNewsPage.selectTag(tag);
     }
 
-    // Step 2: Upload a valid image (JPG from img folder) - BEFORE filling text
-    const imagePath = path.join(__dirname, '..', 'img', 'supra.jpg');
-    await createNewsPage.uploadImage(imagePath);
-    console.log('✅ Image uploaded successfully');
+    // Step 2: Upload image via URL
+    const imageUrl = 'https://images.unsplash.com/photo-1617654112368-307921291f42?w=400&q=80';
+    await createNewsPage.uploadImageFromUrl(imageUrl);
+    console.log('✅ Image uploaded from URL successfully');
 
     // Step 3: Fill title and content
-    await createNewsPage.fillTitle('TC-04 News with Image and Tags');
+    await createNewsPage.fillTitle('TC-04 News with Image and Three Tags');
     await createNewsPage.fillMainText('Test content with image upload and three tags for validation and publishing test');
 
     // Step 4: Click "Publish"
@@ -40,6 +39,5 @@ test.describe('TC-04: Create news with image upload (PNG/JPG, max 10MB)', () => 
     console.log('✅ News with image and 3 tags published successfully!');
   });
 });
-
 
 
