@@ -3,14 +3,23 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:tc01": "playwright test tests/tc-01-create-news-form.spec.ts",
+    "test:tc03": "playwright test tests/tc-03-tag-selection.spec.ts",
+    "allure:generate": "allure generate ./allure-results -o ./allure-report --clean",
+    "allure:open": "allure open ./allure-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.0"
+    "@types/node": "^25.6.0",
+    "allure-commandline": "^2.34.1",
+    "allure-playwright": "^3.9.0"
   },
   "dependencies": {
     "dotenv": "^17.4.2"
