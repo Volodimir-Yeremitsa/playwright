@@ -1,5 +1,8 @@
 # GreenCity Playwright Test Framework
 
+## Allure Report (GitHub Pages) ##
+https://volodimir-yeremitsa.github.io/playwright/
+
 ## Опис
 
 Проєкт для автоматизації тестування GreenCity Web Application з використанням Playwright + TypeScript.
