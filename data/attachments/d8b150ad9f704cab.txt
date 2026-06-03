@@ -1,0 +1,2 @@
+✅ Image uploaded from URL successfully
+✅ News with image and 3 tags published successfully!
