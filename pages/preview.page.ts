@@ -11,6 +11,7 @@ export class PreviewPage extends BasePage {
   readonly mainTextInput: Locator;
   readonly newsDate: Locator;
   readonly newsAuthor: Locator;
+  readonly userName: Locator;  
 
   constructor(page: Page) {
     super(page);
@@ -25,6 +26,7 @@ export class PreviewPage extends BasePage {
     this.tags =  page.locator('.tags-item');
     this.newsDate = page.locator('.news-info .news-info-date');
     this.newsAuthor = page.locator('.news-info .news-info-author');
+    this.userName = page.locator('#header_user-wrp li.user-name');    
   }
 
   get url(): string {
@@ -62,7 +64,7 @@ export class PreviewPage extends BasePage {
       await expect(this.newsDate).toHaveText(expectedDate);
 
       //The preview displays the current user as the author.
-      await expect(this.newsAuthor).toHaveText('by Володимир');    
+      await expect(this.newsAuthor).toHaveText(await this.userName.innerText()); 
 
       });
    }
