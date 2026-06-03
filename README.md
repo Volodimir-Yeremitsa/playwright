@@ -18,7 +18,7 @@ npm install -D allure-playwright
 Створіть `.env` на основі `.env.example`:
 
 ```env
-BASE_URL="https://www.greencity.cx.ua/#/greenCity"
+BASE_URL="https://www.greencity.cx.ua"
 HEADLESS=false
 RETRIES=0
 TIMEOUT=30000
