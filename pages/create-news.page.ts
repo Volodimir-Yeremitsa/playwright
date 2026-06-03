@@ -54,9 +54,9 @@ export class CreateNewsPage extends BasePage {
     this.dateField = this.dateInfo.locator('p').nth(0);
     this.authorField = this.dateInfo.locator('p').nth(1);
 
-    this.cancelButton = this.form.getByRole('button', { name: /cancel|вийти/i }).first();
-    this.previewButton = this.form.getByRole('button', { name: /preview|переглянути/i }).first();
-    this.publishButton = this.form.getByRole('button', { name: /publish|опублікувати/i }).first();
+    this.cancelButton = this.form.locator('.submit-buttons .tertiary-global-button');
+    this.previewButton = this.form.locator('.submit-buttons .secondary-global-button');
+    this.publishButton = this.form.locator('.submit-buttons .primary-global-button');
     
     this.selectedTags = this.form.locator('div.selected-tags, .chips, [class*="tag"][class*="selected"]').first();
     this.tagButtons = this.form.locator('button[class*="tag"], div[class*="tag"] button, .tags-box button');
