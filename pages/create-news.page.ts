@@ -10,7 +10,7 @@ export class CreateNewsPage extends BasePage {
   readonly tagBlock: Locator;
   readonly addImageButton: Locator;
   readonly mainTextInput: Locator;
-  readonly mainTextCounter: Locator;
+  //readonly mainTextCounter: Locator;
   readonly mainTextWarning: Locator;
   readonly dateInfo: Locator; 
   readonly authorField: Locator;
