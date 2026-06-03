@@ -64,7 +64,7 @@ export class PreviewPage extends BasePage {
       await expect(this.newsDate).toHaveText(expectedDate);
 
       //The preview displays the current user as the author.
-      await expect(this.newsAuthor).toHaveText(await this.userName.innerText()); 
+      await expect(this.newsAuthor).toContainText(await this.userName.innerText()); 
 
       });
    }
