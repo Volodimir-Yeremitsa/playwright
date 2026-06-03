@@ -13,7 +13,7 @@ export class HomePage extends BasePage {
   }
 
   get url(): string {
-    return ENV.BASE_URL;
+    return `${ENV.BASE_URL}/#/greenCity`;
   }
 
   async open(): Promise<void> {
