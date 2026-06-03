@@ -67,6 +67,8 @@ tests/          spec-файли з тестами
 - `BasePage` — базові методи для сторінок.
 - `HomePage` — головна сторінка GreenCity.
 - `NewsPage` — сторінка новин `/news`.
+- `NewsDetailPage` — сторінка однієї новини.
+- `PreviewPage` — сторінка попереднього перегляду новини.
 - `CreateNewsPage` — форма створення новини.
 - `HeaderComponent` — верхнє меню сайту.
 - `SignInModal` — модальне вікно логіну.
