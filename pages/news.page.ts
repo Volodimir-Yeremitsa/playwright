@@ -42,6 +42,21 @@ export class NewsPage extends BasePage {
 
   async openCreateNewsForm(): Promise<void> {
     await test.step('Натиснути кнопку Create News', async () => {
+      const confirmCancelButton = this.page
+        .locator('button')
+        .filter({ hasText: /Yes, cancel|Так, скасувати/i })
+        .first();
+      
+      const isCancelModalVisible = await confirmCancelButton.isVisible().catch(() => false);
+      
+      if (isCancelModalVisible) {
+        await confirmCancelButton.click();
+        await this.page.waitForTimeout(500);
+      }
+      
+      const backdrop = this.page.locator('.cdk-overlay-backdrop');
+      await backdrop.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
+      
       await this.createNewsButton.click();
     });
   }
@@ -68,5 +83,4 @@ export class NewsPage extends BasePage {
       await news.click();
     });
   }
-
 }
