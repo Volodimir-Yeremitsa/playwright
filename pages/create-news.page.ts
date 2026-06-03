@@ -1,6 +1,7 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { BasePage } from '@pages/base.page';
 import { ENV } from '@utils/env';
+import { NewsPage } from './news.page';
 
 export class CreateNewsPage extends BasePage {
   readonly form: Locator;
@@ -9,16 +10,19 @@ export class CreateNewsPage extends BasePage {
   readonly tagBlock: Locator;
   readonly addImageButton: Locator;
   readonly mainTextInput: Locator;
-  readonly mainTextCounter: Locator;
+  readonly mainTextCounter: Locator; // Залишаємо ваш лічильник, поки не переконаємось, що його видалили з UI
+  readonly mainTextWarning: Locator;
   readonly dateInfo: Locator; 
   readonly authorField: Locator;
   readonly dateField: Locator;
   readonly sourceInput: Locator;
+  readonly sourceWarning: Locator;
+  readonly selectedTags: Locator;
+  readonly tagButtons: Locator;
   readonly cancelButton: Locator;
   readonly previewButton: Locator;
   readonly publishButton: Locator;
-  readonly selectedTags: Locator;
-  readonly tagButtons: Locator;
+  readonly EditButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -48,7 +52,7 @@ export class CreateNewsPage extends BasePage {
     this.dateField = this.dateInfo.locator('p').nth(0);
     this.authorField = this.dateInfo.locator('p').nth(1);
 
-    this.sourceInput = this.form
+this.sourceInput = this.form
       .getByPlaceholder(/посилання на зовнішнє джерело|link to external source/i)
       .first();
 
@@ -58,10 +62,22 @@ export class CreateNewsPage extends BasePage {
     
     this.selectedTags = this.form.locator('div.selected-tags, .chips, [class*="tag"][class*="selected"]').first();
     this.tagButtons = this.form.locator('button[class*="tag"], div[class*="tag"] button, .tags-box button');
+
+    // --- Локатори з гілки main (обов'язкові для тест-кейсів) ---
+    // tc-02-verify-title-field
+    this.titleCounter = this.form.locator('span.field-info').first();
+    // tc-05-verify-main-text-field
+    this.mainTextWarning = this.form.locator('.textarea-wrapper .field-info.warning');
+    // tc-06-verify-source-field
+    this.sourceWarning = this.form.locator('.source-block .field-info.warning');
+    
+    this.EditButton = this.form.locator('.submit-buttons .primary-global-button');
   }
 
   get url(): string {
-   return `${ENV.BASE_URL}/news/create-news`;
+    // Якщо форма відкривається як окрема сторінка, URL може бути таким.
+    // Якщо відкривається модалкою — тест потрапляє сюди через NewsPage.openCreateNewsForm().
+    return `${ENV.BASE_URL}/news/create-news`;
   }
 
   async waitForOpened(): Promise<void> {
@@ -87,7 +103,9 @@ export class CreateNewsPage extends BasePage {
 
   async expectFieldsInCorrectOrder(): Promise<void> {
     await test.step('Перевірити порядок полів форми Create News', async () => {
-      
+      //The form displays all fields in the specified order (Title, Tags, Add Image, Main Text, Author, Date, Source, Cancel/Preview/Publish).
+      //DOM структура може бути складною, тому перевіряємо порядок за допомогою позицій елементів на сторінці?
+
     });
   }
 
