@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - RomaShepel
   pull_request:
     branches:
       - main
+      - RomaShepel
   workflow_dispatch:
 
 jobs:

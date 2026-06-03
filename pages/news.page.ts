@@ -14,7 +14,8 @@ export class NewsPage extends BasePage {
   constructor(page: Page) {
     super(page);
 
-    this.newsContainer = page.locator('app-news, app-eco-news, main').first();
+    // Прибрано тег main для уникнення таймаутів
+    this.newsContainer = page.locator('app-news, app-eco-news').first();
 
     this.createNewsButton = page
       .getByRole('link', { name: /create news|створити новину/i })
@@ -25,12 +26,11 @@ export class NewsPage extends BasePage {
 
     this.searchButton = page.locator('.container-img .search-img').first();
     this.searchInput = page.locator('.container-input input[placeholder="Search"]');
-
   }
   
   get url(): string {
-    // Для hash-router правильний URL: BASE_URL + /news.
-    return `${ENV.BASE_URL}/#/greenCity/news`
+    // Правильний URL без дублювання хешу
+    return `${ENV.BASE_URL}/news`; 
   }
 
   async open(): Promise<void> {
@@ -42,6 +42,21 @@ export class NewsPage extends BasePage {
 
   async openCreateNewsForm(): Promise<void> {
     await test.step('Натиснути кнопку Create News', async () => {
+      const confirmCancelButton = this.page
+        .locator('button')
+        .filter({ hasText: /Yes, cancel|Так, скасувати/i })
+        .first();
+      
+      const isCancelModalVisible = await confirmCancelButton.isVisible().catch(() => false);
+      
+      if (isCancelModalVisible) {
+        await confirmCancelButton.click();
+        await this.page.waitForTimeout(500);
+      }
+      
+      const backdrop = this.page.locator('.cdk-overlay-backdrop');
+      await backdrop.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {});
+      
       await this.createNewsButton.click();
     });
   }
@@ -68,5 +83,4 @@ export class NewsPage extends BasePage {
       await news.click();
     });
   }
-
 }

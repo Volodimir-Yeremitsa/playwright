@@ -21,6 +21,14 @@ export abstract class BasePage {
 
   // Перехід на сторінку.
   async navigate(): Promise<Response | null> {
+    if (!this.url) {
+      throw new Error(
+        `Navigation failed: 'this.url' is undefined in ${this.constructor.name}. ` +
+        `Перевірте, чи коректно реалізовано 'get url()' у дочірньому класі.`
+      );
+    }
+    
+    // Використовуємо стандартне очікування замість domcontentloaded для стабільності Angular
     return await this.page.goto(this.url);
   }
 
