@@ -29,8 +29,8 @@ export class NewsPage extends BasePage {
   }
   
   get url(): string {
-    // Правильний URL без дублювання хешу
-    return `${ENV.BASE_URL}/news`; 
+    // Для hash-router правильний URL: BASE_URL + /#/greenCity/news.
+    return `${ENV.BASE_URL}/#/greenCity/news`
   }
 
   async open(): Promise<void> {
