@@ -69,7 +69,9 @@ export class CreateNewsPage extends BasePage {
   }
 
   get url(): string {
-    return `${ENV.BASE_URL}/news/create-news`;
+    // Якщо форма відкривається як окрема сторінка, URL може бути таким.
+    // Якщо відкривається модалкою — тест потрапляє сюди через NewsPage.openCreateNewsForm().
+    return `${ENV.BASE_URL}/#/greenCity/news/create-news`;
   }
 
   async waitForOpened(): Promise<void> {
